@@ -1,0 +1,21 @@
+# ===== 4. Configuration STATIQUE du routage =====
+# Lancer la gateway avec le profil "static" :
+#   mvn spring-boot:run -Dspring-boot.run.profiles=static
+# Etape 1 (sans Eureka) : uri: http://localhost:8081
+# Etape 2 (avec Eureka)  : uri: lb://CUSTOMER-SERVICE  (load balancing via l'annuaire)
+spring:
+  cloud:
+    gateway:
+      routes:
+        - id: r1
+          uri: lb://CUSTOMER-SERVICE      # ou http://localhost:8081
+          predicates:
+            - Path=/api/customers/**
+        - id: r2
+          uri: lb://INVENTORY-SERVICE     # ou http://localhost:8082
+          predicates:
+            - Path=/api/products/**
+        - id: r3
+          uri: lb://BILLING-SERVICE       # ou http://localhost:8083
+          predicates:
+            - Path=/api/bills/**, /fullBill/**
